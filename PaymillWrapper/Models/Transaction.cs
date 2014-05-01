@@ -224,6 +224,12 @@ namespace PaymillWrapper.Models
                 this.status = status.ToString();
                 return this;
             }
+
+            public Transaction.Filter ByCreatedAt(DateTime startCreatedAt, DateTime endCreatedAt)
+            {
+                base.byCreatedAt(startCreatedAt, endCreatedAt);
+                return this;
+            }
         }
 
         public sealed class Order : BaseOrder

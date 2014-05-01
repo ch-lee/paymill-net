@@ -5,6 +5,7 @@ using PaymillWrapper.Service;
 using System.Collections.Generic;
 using PaymillWrapper.Models;
 using PaymillWrapper.Utils;
+using System.Linq;
 
 namespace UnitTest.Net
 {
@@ -180,6 +181,21 @@ namespace UnitTest.Net
         {
             var list = _paymill.TransactionService.ListAsync().Result;
             Assert.IsTrue(list.DataCount > 0, "List Transaction Failed");
+        }
+
+        [TestMethod]
+        public void ListTransactionsByCreated()
+        {
+            var fromFeb = new DateTime(2014, 2, 1);
+            var toEndOfApr = new DateTime(2014, 4, 30);
+            var list = _paymill.TransactionService.ListAsync(Transaction.CreateFilter()
+                                                                        .ByCreatedAt(fromFeb, toEndOfApr), null).Result;
+
+            Assert.IsTrue(list.Data.First().CreatedAt > fromFeb);
+            Assert.IsTrue(list.Data.First().CreatedAt < toEndOfApr);
+
+            Assert.IsTrue(list.Data.Last().CreatedAt > fromFeb);
+            Assert.IsTrue(list.Data.Last().CreatedAt < toEndOfApr);
         }
     }
 }
